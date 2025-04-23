@@ -11,6 +11,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+dist/
 
 # testing
 /coverage
@@ -45,5 +46,6 @@ yarn-error.log*
 next-env.d.ts
 
 # nx specific files
+.nx
 .nx/cache
 .nx/workspace-data

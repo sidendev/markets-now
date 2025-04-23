@@ -1,3 +1,16 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "npmScope": "markets-now",
+    "defaultBase": "main",
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "nx/tasks-runners/default",
+            "options": {
+                "cacheableOperations": ["build", "lint"]
+            }
+        }
+    },
+    "projects": {
+        "frontend": "apps/frontend"
+    }
 }

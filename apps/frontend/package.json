@@ -3,13 +3,10 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "nx:dev": "nx serve frontend",
-        "nx:build": "nx build frontend",
-        "nx:lint": "nx lint frontend",
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
+        "dev": "nx serve frontend",
+        "build": "nx build frontend",
+        "start": "nx serve frontend",
+        "lint": "nx lint frontend"
     },
     "dependencies": {
         "next": "15.2.4",

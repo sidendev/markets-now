@@ -1,0 +1,21 @@
+{
+    "name": "markets-now-workspace",
+    "version": "0.0.0",
+    "license": "MIT",
+    "scripts": {
+        "dev": "nx serve frontend",
+        "build": "nx build frontend",
+        "start": "nx serve frontend",
+        "lint": "nx lint frontend"
+    },
+    "private": true,
+    "workspaces": [
+        "apps/*"
+    ],
+    "devDependencies": {
+        "@nx/eslint": "^20.8.0",
+        "@nx/next": "^20.8.0",
+        "nx": "20.8.0",
+        "typescript": "^5"
+    }
+}

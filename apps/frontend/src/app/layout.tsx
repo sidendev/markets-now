@@ -1,27 +1,19 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({
     subsets: ['latin'],
     variable: '--font-inter',
 });
 
-export const metadata: Metadata = {
-    title: 'Markets Now',
-    description: 'Track stock market prices and trends',
-};
-
 export default function RootLayout({
     children,
-}: Readonly<{
+}: {
     children: React.ReactNode;
-}>) {
+}) {
     return (
-        <html lang="en" className="dark">
-            <body
-                className={`${inter.variable} bg-background text-foreground antialiased`}
-            >
+        <html lang="en" className={`${inter.variable} dark`}>
+            <body className="min-h-screen bg-background text-foreground">
                 {children}
             </body>
         </html>

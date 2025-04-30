@@ -11,7 +11,7 @@ export default function Home() {
                         Markets Overview
                     </h2>
                     <p className="text-muted-foreground">
-                        Your real-time stock market tracker
+                        Real-time market tracking & notifications
                     </p>
                 </div>
 
@@ -20,7 +20,7 @@ export default function Home() {
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div className="p-6 flex flex-col space-y-2">
                             <h3 className="text-lg font-medium">
-                                Market Summary
+                                Market Indices
                             </h3>
                             <div className="space-y-1">
                                 <div className="flex justify-between">
@@ -49,10 +49,10 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Watchlist Card */}
+                    {/* Gainers Card */}
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div className="p-6 flex flex-col space-y-2">
-                            <h3 className="text-lg font-medium">Watchlist</h3>
+                            <h3 className="text-lg font-medium">Top Gainers</h3>
                             <div className="space-y-1">
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">
@@ -82,10 +82,10 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Market Movers Card */}
+                    {/* Market Losers Card */}
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
                         <div className="p-6 flex flex-col space-y-2">
-                            <h3 className="text-lg font-medium">Top Movers</h3>
+                            <h3 className="text-lg font-medium">Top Losers</h3>
                             <div className="space-y-1">
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">
@@ -115,9 +115,7 @@ export default function Home() {
                 </div>
 
                 <div className="mt-6 rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-                    <h3 className="text-lg font-medium mb-4">
-                        Recent Market Activity
-                    </h3>
+                    <h3 className="text-lg font-medium mb-4">Most Active</h3>
                     <div className="relative w-full overflow-auto">
                         <table className="w-full caption-bottom text-sm">
                             <thead className="[&_tr]:border-b">

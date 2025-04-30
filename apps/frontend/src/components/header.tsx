@@ -4,10 +4,10 @@ export function Header() {
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 items-center">
-                <div className="mr-4 flex">
+                <div className="mr-4 flex pl-6">
                     <Link href="/" className="flex items-center space-x-2">
                         <span className="font-bold text-xl hidden sm:inline-block">
-                            Markets Now
+                            MarketsNow
                         </span>
                         <span className="font-bold text-xl sm:hidden">MN</span>
                     </Link>
@@ -20,14 +20,14 @@ export function Header() {
                         Markets
                     </Link>
                     <Link
-                        href="/screener"
+                        href="/notifications"
                         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     >
-                        Screener
+                        Notifications
                     </Link>
                 </nav>
-                <div className="ml-auto flex items-center space-x-4">
-                    <div className="relative w-full max-w-sm">
+                <div className="ml-auto flex items-center space-x-4 pr-6">
+                    <div className="relative w-full max-w-[160px] sm:max-w-sm">
                         <input
                             type="text"
                             placeholder="Search..."

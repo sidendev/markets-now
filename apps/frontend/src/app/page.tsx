@@ -7,7 +7,7 @@ export default function Home() {
                         Markets Overview
                     </h2>
                     <p className="text-muted-foreground">
-                        Real-time market tracking & notifications
+                        Real-time market tracking & alert notifications
                     </p>
                 </div>
 

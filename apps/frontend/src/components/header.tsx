@@ -1,6 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export function Header() {
+    const pathname = usePathname();
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 items-center">
@@ -14,16 +19,32 @@ export function Header() {
                 </div>
                 <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
                     <Link
-                        href="/markets"
-                        className="text-sm font-medium transition-colors hover:text-primary"
+                        href="/"
+                        className={`text-sm font-medium transition-colors hover:text-primary ${
+                            pathname === '/' ? '' : 'text-muted-foreground'
+                        }`}
                     >
                         Markets
                     </Link>
                     <Link
                         href="/alerts"
-                        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                        className={`text-sm font-medium transition-colors hover:text-primary ${
+                            pathname === '/alerts'
+                                ? ''
+                                : 'text-muted-foreground'
+                        }`}
                     >
                         Alerts
+                    </Link>
+                    <Link
+                        href="/watchlist"
+                        className={`text-sm font-medium transition-colors hover:text-primary ${
+                            pathname === '/watchlist'
+                                ? ''
+                                : 'text-muted-foreground'
+                        }`}
+                    >
+                        Watchlist
                     </Link>
                 </nav>
                 <div className="ml-auto flex items-center space-x-4 pr-6">

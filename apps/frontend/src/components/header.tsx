@@ -20,10 +20,10 @@ export function Header() {
                         Markets
                     </Link>
                     <Link
-                        href="/notifications"
+                        href="/alerts"
                         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                     >
-                        Notifications
+                        Alerts
                     </Link>
                 </nav>
                 <div className="ml-auto flex items-center space-x-4 pr-6">

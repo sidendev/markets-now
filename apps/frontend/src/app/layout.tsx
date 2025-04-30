@@ -1,3 +1,4 @@
+import { Header } from '../components/header';
 import './globals.css';
 import { Inter } from 'next/font/google';
 
@@ -13,8 +14,11 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className={`${inter.variable} dark`}>
-            <body className="min-h-screen bg-background text-foreground">
-                {children}
+            <body className="min-h-screen bg-background font-sans antialiased">
+                <div className="relative flex min-h-screen flex-col">
+                    <Header />
+                    <main className="flex-1">{children}</main>
+                </div>
             </body>
         </html>
     );

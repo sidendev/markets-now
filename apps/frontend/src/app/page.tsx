@@ -1,10 +1,6 @@
-import { Header } from '../components/header';
-
 export default function Home() {
     return (
         <div className="flex flex-col min-h-screen">
-            <Header />
-
             <main className="flex-grow p-6">
                 <div className="flex flex-col space-y-2 mb-6">
                     <h2 className="text-3xl font-bold tracking-tight">

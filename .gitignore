@@ -46,7 +46,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# nx specific files
+# nx
 .nx
 .nx/cache
 .nx/workspace-data
+
+## env vars
+src/main/resources/env.properties
+/env.properties

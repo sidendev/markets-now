@@ -25,7 +25,7 @@
 - **Authentication**: AWS Cognito (planned)
 - **DevOps**: GitHub Actions, Docker, AWS, Prometheus
 
-> This project is being built using TDD principles and will showcase end-to-end production-ready architecture.
+> This project is being built using TDD principles and will showcase production-ready architecture.
 
 ---
 

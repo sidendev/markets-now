@@ -26,7 +26,7 @@ public class IndicesService {
     public void refreshCache() {
         List<IndexQuote> quotes = apiClient.fetchAllQuotes();
         quotes.forEach(quote -> cache.put(quote.getSymbol(), quote));
-        System.out.println("Index cache last refreshed at: " + new Date());
+        System.out.println("Index FMP API cache last refreshed at: " + new Date());
     }
 }
 

@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+import java.util.Objects;
+
 @Component
 public class IndicesApiClient {
 
@@ -22,4 +25,14 @@ public class IndicesApiClient {
         IndexQuote[] response = restTemplate.getForObject(url, IndexQuote[].class);
         return response != null && response.length > 0 ? response[0] : null;
     }
+
+    public List<IndexQuote> fetchAllQuotes() {
+        List<String> symbols = List.of("^GSPC", "^IXIC", "^DJI");
+
+        return symbols.stream()
+                .map(this::fetchQuote)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
 }

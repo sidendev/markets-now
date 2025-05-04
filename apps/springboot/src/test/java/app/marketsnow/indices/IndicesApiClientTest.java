@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 public class IndicesApiClientTest {
 
@@ -18,6 +20,20 @@ public class IndicesApiClientTest {
         assertNotNull(quote);
         assertEquals("^GSPC", quote.getSymbol());
         assertTrue(quote.getPrice() > 0);
+    }
+
+    @Test
+    void shouldFetchMultipleIndexQuotes() {
+        List<IndexQuote> quotes = client.fetchAllQuotes();
+
+        assertEquals(3, quotes.size());
+
+        List<String> symbols = quotes.stream().map(IndexQuote::getSymbol).toList();
+        assertTrue(symbols.contains("^GSPC"));
+        assertTrue(symbols.contains("^IXIC"));
+        assertTrue(symbols.contains("^DJI"));
+
+        quotes.forEach(q -> assertTrue(q.getPrice() > 0));
     }
 }
 

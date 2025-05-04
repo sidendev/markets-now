@@ -2,13 +2,17 @@ package app.marketsnow.indices;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class IndicesApiClientTest {
+
+    @Autowired
+    private IndicesApiClient client;
 
     @Test
     void shouldFetchQuoteForGspcFromFmp() {
-        IndicesApiClient client = new IndicesApiClient();
-
         IndexQuote quote = client.fetchQuote("^GSPC");
 
         assertNotNull(quote);

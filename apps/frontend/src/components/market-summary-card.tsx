@@ -39,9 +39,9 @@ export function MarketSummaryCard() {
                 )}
 
                 {!isLoading && !error && (
-                    <div className="space-y-1">
+                    <div className="space-y-0">
                         {spIndex && (
-                            <div className="flex justify-between">
+                            <div className="flex justify-between py-2 border-b">
                                 <span className="text-muted-foreground">
                                     S&P 500
                                 </span>
@@ -60,7 +60,7 @@ export function MarketSummaryCard() {
                         )}
 
                         {nasdaqIndex && (
-                            <div className="flex justify-between">
+                            <div className="flex justify-between py-2 border-b">
                                 <span className="text-muted-foreground">
                                     Nasdaq
                                 </span>
@@ -79,7 +79,7 @@ export function MarketSummaryCard() {
                         )}
 
                         {dowIndex && (
-                            <div className="flex justify-between">
+                            <div className="flex justify-between py-2">
                                 <span className="text-muted-foreground">
                                     Dow Jones
                                 </span>

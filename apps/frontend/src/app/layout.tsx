@@ -1,4 +1,5 @@
 import { Header } from '../components/header';
+import { Footer } from '../components/footer';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import type { Metadata } from 'next';
@@ -25,6 +26,7 @@ export default function RootLayout({
                 <div className="relative flex min-h-screen flex-col">
                     <Header />
                     <main className="flex-1">{children}</main>
+                    <Footer />
                 </div>
             </body>
         </html>

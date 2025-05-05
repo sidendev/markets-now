@@ -1,11 +1,18 @@
 import { Header } from '../components/header';
 import './globals.css';
 import { Inter } from 'next/font/google';
+import type { Metadata } from 'next';
 
 const inter = Inter({
     subsets: ['latin'],
     variable: '--font-inter',
 });
+
+export const metadata: Metadata = {
+    title: 'MarketsNow - Real-time Market Tracking',
+    description:
+        'Track real-time market prices and set alerts for stock price notifications',
+};
 
 export default function RootLayout({
     children,

@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { AuthModal } from './auth-modal';
 
 export function Header() {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [authModalOpen, setAuthModalOpen] = useState(false);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -64,6 +66,7 @@ export function Header() {
                     <button
                         className="h-9 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer"
                         aria-label="Login"
+                        onClick={() => setAuthModalOpen(true)}
                     >
                         Login
                     </button>
@@ -159,7 +162,10 @@ export function Header() {
                         <div className="py-2">
                             <button
                                 className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium"
-                                onClick={() => setMobileMenuOpen(false)}
+                                onClick={() => {
+                                    setMobileMenuOpen(false);
+                                    setAuthModalOpen(true);
+                                }}
                             >
                                 Login
                             </button>
@@ -167,6 +173,11 @@ export function Header() {
                     </div>
                 </div>
             )}
+
+            <AuthModal
+                isOpen={authModalOpen}
+                onClose={() => setAuthModalOpen(false)}
+            />
         </header>
     );
 }

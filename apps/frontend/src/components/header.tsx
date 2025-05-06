@@ -15,10 +15,12 @@ export function Header() {
             <div className="flex h-14 items-center px-6 max-w-[1440px] mx-auto">
                 <div className="mr-4 flex">
                     <Link href="/" className="flex items-center space-x-2">
-                        <span className="font-bold text-xl hidden sm:inline-block">
+                        <span className="font-extrabold text-xl hidden sm:inline-block">
                             MarketsNow
                         </span>
-                        <span className="font-bold text-xl sm:hidden">MN</span>
+                        <span className="font-extrabold text-xl sm:hidden">
+                            MN
+                        </span>
                     </Link>
                 </div>
 

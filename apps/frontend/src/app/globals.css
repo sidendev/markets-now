@@ -85,3 +85,14 @@
         font-feature-settings: 'rlig' 1, 'calt' 1;
     }
 }
+
+/* blur effect for the entire app root container */
+body.modal-open > div.relative {
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+}
+
+/* ensures modal is not blurred */
+.modal-wrapper {
+    filter: none;
+}

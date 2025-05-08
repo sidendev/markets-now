@@ -3,6 +3,7 @@ package app.marketsnow.dowjones.websocket;
 import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.client.WebSocketClient;
 import java.net.URI;
+import app.marketsnow.dowjones.websocket.utils.DowJonesMessageBuilder;
 
 public class DowJonesWebSocketClient extends WebSocketClient {
 
@@ -10,13 +11,9 @@ public class DowJonesWebSocketClient extends WebSocketClient {
         super(serverUri);
     }
 
-    public static String buildSubscribeMessage(String symbol) {
-        return String.format("{\"type\":\"subscribe\",\"symbol\":\"%s\"}", symbol);
-    }
-
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("Connected to Finnhub WebSocket");
+        System.out.println("Connected to DowJones WebSocket");
 
         String[] symbols = {
                 "MMM", "AXP", "AMGN", "AMZN", "AAPL", "BA", "CAT", "CVX", "CSCO", "KO",
@@ -25,7 +22,7 @@ public class DowJonesWebSocketClient extends WebSocketClient {
         };
 
         for (String symbol : symbols) {
-            send("{\"type\":\"subscribe\", \"symbol\":\"" + symbol + "\"}");
+            send(DowJonesMessageBuilder.buildSubscribeMessage(symbol));
         }
     }
 
@@ -43,6 +40,5 @@ public class DowJonesWebSocketClient extends WebSocketClient {
     public void onError(Exception ex) {
         ex.printStackTrace();
     }
-
 }
 

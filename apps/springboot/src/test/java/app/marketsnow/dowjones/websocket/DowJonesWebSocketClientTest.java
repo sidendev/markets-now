@@ -17,11 +17,15 @@ public class DowJonesWebSocketClientTest {
 
     @Test
     void shouldHandleReceivedMessage() {
+        // simple mock cache
+        DowJonesQuoteCache mockCache = new DowJonesQuoteCache();
+
+        // test client with override to capture message
         class TestClient extends DowJonesWebSocketClient {
             private String lastMessage;
 
-            public TestClient(URI uri) {
-                super(uri);
+            public TestClient(URI uri, DowJonesQuoteCache cache) {
+                super(uri, cache);
             }
 
             @Override
@@ -34,11 +38,12 @@ public class DowJonesWebSocketClientTest {
             }
         }
 
-        TestClient client = new TestClient(URI.create("ws://localhost"));
+        TestClient client = new TestClient(URI.create("ws://localhost"), mockCache);
         String mockMessage = "{\"type\":\"ping\"}";
         client.onMessage(mockMessage);
-        assertEquals("{\"type\":\"ping\"}", client.getLastMessage());
+        assertEquals(mockMessage, client.getLastMessage());
     }
 }
+
 
 

@@ -1,9 +1,12 @@
 package app.marketsnow.dowjones.websocket;
 
 import app.marketsnow.dowjones.websocket.utils.DowJonesMessageBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+
 import java.net.URI;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DowJonesWebSocketClientTest {
 
@@ -17,15 +20,14 @@ public class DowJonesWebSocketClientTest {
 
     @Test
     void shouldHandleReceivedMessage() {
-        // simple mock cache
         DowJonesQuoteCache mockCache = new DowJonesQuoteCache();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        // test client with override to capture message
         class TestClient extends DowJonesWebSocketClient {
             private String lastMessage;
 
-            public TestClient(URI uri, DowJonesQuoteCache cache) {
-                super(uri, cache);
+            public TestClient(URI uri, DowJonesQuoteCache cache, ObjectMapper mapper) {
+                super(uri, cache, mapper);
             }
 
             @Override
@@ -38,12 +40,13 @@ public class DowJonesWebSocketClientTest {
             }
         }
 
-        TestClient client = new TestClient(URI.create("ws://localhost"), mockCache);
+        TestClient client = new TestClient(URI.create("ws://localhost"), mockCache, objectMapper);
         String mockMessage = "{\"type\":\"ping\"}";
         client.onMessage(mockMessage);
         assertEquals(mockMessage, client.getLastMessage());
     }
 }
+
 
 
 

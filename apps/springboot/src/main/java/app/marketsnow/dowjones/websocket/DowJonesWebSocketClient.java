@@ -12,11 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DowJonesWebSocketClient extends WebSocketClient {
 
     private final DowJonesQuoteCache cache;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public DowJonesWebSocketClient(URI serverUri, DowJonesQuoteCache cache) {
+    public DowJonesWebSocketClient(URI serverUri, DowJonesQuoteCache cache, ObjectMapper objectMapper) {
         super(serverUri);
         this.cache = cache;
+        this.objectMapper = objectMapper;
     }
 
     @Override

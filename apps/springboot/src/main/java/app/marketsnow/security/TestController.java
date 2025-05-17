@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    // auth testing endpoint
     @GetMapping("/api/test")
     public String test(@AuthenticationPrincipal Jwt jwt) {
         String email = jwt.getClaim("email");

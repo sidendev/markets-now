@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useAuth } from '../context/auth-context';
 
 export function AuthModal({
     isOpen,
@@ -12,6 +13,27 @@ export function AuthModal({
 }) {
     const [isLoginView, setIsLoginView] = useState(true);
     const [mounted, setMounted] = useState(false);
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmationCode, setConfirmationCode] = useState('');
+
+    // auth context
+    const { signInUser, signUpUser, confirmSignUpUser, isLoading } = useAuth();
+
+    const [loginError, setLoginError] = useState('');
+
+    // resetting form
+    useEffect(() => {
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setShowConfirmation(false);
+        setConfirmationCode('');
+    }, [isLoginView]);
 
     useEffect(() => {
         setMounted(true);
@@ -38,6 +60,66 @@ export function AuthModal({
             document.body.classList.remove('modal-open');
         };
     }, [isOpen]);
+
+    // handle login form submission
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await signInUser({
+                username: email,
+                password,
+            });
+            // closing modal on successful login
+            onClose();
+        } catch (err: unknown) {
+            console.error('Login failed:', err);
+            if (err instanceof Error) {
+                setLoginError(err.message || 'An error occurred during login');
+                if (err.message?.includes('UserPool not configured')) {
+                    setLoginError(
+                        'Authentication service not properly configured. Please try again later.'
+                    );
+                }
+            } else {
+                setLoginError('An unexpected error occurred');
+            }
+        }
+    };
+
+    // handle sign up form submission
+    const handleSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        try {
+            await signUpUser({
+                username: email,
+                password,
+                options: {
+                    userAttributes: {
+                        email,
+                    },
+                },
+            });
+            setShowConfirmation(true);
+        } catch (err) {
+            console.error('Sign up failed:', err);
+        }
+    };
+
+    const handleConfirmation = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await confirmSignUpUser(email, confirmationCode);
+            setShowConfirmation(false);
+            setIsLoginView(true);
+        } catch (err) {
+            console.error('Confirmation failed:', err);
+        }
+    };
 
     const modalContent = (
         <>
@@ -74,130 +156,242 @@ export function AuthModal({
                         </svg>
                     </button>
 
-                    <div className="mb-6 flex border-b">
-                        <button
-                            className={`py-2 px-4 text-sm font-medium cursor-pointer ${
-                                isLoginView ? 'border-b-2 border-primary' : ''
-                            }`}
-                            onClick={() => setIsLoginView(true)}
-                        >
-                            Login
-                        </button>
-                        <button
-                            className={`py-2 px-4 text-sm font-medium cursor-pointer ${
-                                !isLoginView ? 'border-b-2 border-primary' : ''
-                            }`}
-                            onClick={() => setIsLoginView(false)}
-                        >
-                            Sign Up
-                        </button>
-                    </div>
+                    {loginError && (
+                        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+                            {loginError}
+                        </div>
+                    )}
 
-                    {isLoginView ? (
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">
-                                Welcome back
-                            </h2>
-                            <p className="text-sm text-muted-foreground">
-                                Login to your account
-                            </p>
-
-                            <div className="space-y-3">
-                                <div className="space-y-1">
-                                    <label
-                                        htmlFor="email"
-                                        className="text-sm font-medium"
-                                    >
-                                        Email
-                                    </label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        placeholder="name@example.com"
-                                        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                    />
-                                </div>
-
-                                <div className="space-y-1">
-                                    <label
-                                        htmlFor="password"
-                                        className="text-sm font-medium"
-                                    >
-                                        Password
-                                    </label>
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        placeholder="••••••••"
-                                        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                    />
-                                </div>
+                    {!showConfirmation ? (
+                        <>
+                            <div className="mb-6 flex border-b">
+                                <button
+                                    className={`py-2 px-4 text-sm font-medium cursor-pointer ${
+                                        isLoginView
+                                            ? 'border-b-2 border-primary'
+                                            : ''
+                                    }`}
+                                    onClick={() => setIsLoginView(true)}
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    className={`py-2 px-4 text-sm font-medium cursor-pointer ${
+                                        !isLoginView
+                                            ? 'border-b-2 border-primary'
+                                            : ''
+                                    }`}
+                                    onClick={() => setIsLoginView(false)}
+                                >
+                                    Sign Up
+                                </button>
                             </div>
 
-                            <button className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer">
-                                Login
-                            </button>
-                        </div>
+                            {isLoginView ? (
+                                <form
+                                    onSubmit={handleLogin}
+                                    className="space-y-4"
+                                >
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl font-semibold">
+                                            Welcome back
+                                        </h2>
+                                        <p className="text-sm text-muted-foreground">
+                                            Login to your account
+                                        </p>
+
+                                        <div className="space-y-3">
+                                            <div className="space-y-1">
+                                                <label
+                                                    htmlFor="email"
+                                                    className="text-sm font-medium"
+                                                >
+                                                    Email
+                                                </label>
+                                                <input
+                                                    id="email"
+                                                    type="email"
+                                                    placeholder="name@example.com"
+                                                    value={email}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
+                                                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <label
+                                                    htmlFor="password"
+                                                    className="text-sm font-medium"
+                                                >
+                                                    Password
+                                                </label>
+                                                <input
+                                                    id="password"
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                    value={password}
+                                                    onChange={(e) =>
+                                                        setPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading
+                                                ? 'Logging in...'
+                                                : 'Login'}
+                                        </button>
+                                    </div>
+                                </form>
+                            ) : (
+                                <form
+                                    onSubmit={handleSignUp}
+                                    className="space-y-4"
+                                >
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl font-semibold">
+                                            Create an account
+                                        </h2>
+                                        <p className="text-sm text-muted-foreground">
+                                            Sign up for MarketsNow
+                                        </p>
+
+                                        <div className="space-y-3">
+                                            <div className="space-y-1">
+                                                <label
+                                                    htmlFor="signup-email"
+                                                    className="text-sm font-medium"
+                                                >
+                                                    Email
+                                                </label>
+                                                <input
+                                                    id="signup-email"
+                                                    type="email"
+                                                    placeholder="name@example.com"
+                                                    value={email}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
+                                                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <label
+                                                    htmlFor="signup-password"
+                                                    className="text-sm font-medium"
+                                                >
+                                                    Password
+                                                </label>
+                                                <input
+                                                    id="signup-password"
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                    value={password}
+                                                    onChange={(e) =>
+                                                        setPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="space-y-1">
+                                                <label
+                                                    htmlFor="signup-confirm"
+                                                    className="text-sm font-medium"
+                                                >
+                                                    Confirm Password
+                                                </label>
+                                                <input
+                                                    id="signup-confirm"
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                    value={confirmPassword}
+                                                    onChange={(e) =>
+                                                        setConfirmPassword(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            type="submit"
+                                            className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading
+                                                ? 'Creating account...'
+                                                : 'Create Account'}
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+                        </>
                     ) : (
-                        <div className="space-y-4">
-                            <h2 className="text-xl font-semibold">
-                                Create an account
-                            </h2>
-                            <p className="text-sm text-muted-foreground">
-                                Sign up for MarketsNow
-                            </p>
-
-                            <div className="space-y-3">
-                                <div className="space-y-1">
-                                    <label
-                                        htmlFor="signup-email"
-                                        className="text-sm font-medium"
-                                    >
-                                        Email
-                                    </label>
-                                    <input
-                                        id="signup-email"
-                                        type="email"
-                                        placeholder="name@example.com"
-                                        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                    />
-                                </div>
+                        <form
+                            onSubmit={handleConfirmation}
+                            className="space-y-4"
+                        >
+                            <div className="space-y-4">
+                                <h2 className="text-xl font-semibold">
+                                    Confirm your account
+                                </h2>
+                                <p className="text-sm text-muted-foreground">
+                                    Please enter the verification code sent to
+                                    your email
+                                </p>
 
                                 <div className="space-y-1">
                                     <label
-                                        htmlFor="signup-password"
+                                        htmlFor="confirmation-code"
                                         className="text-sm font-medium"
                                     >
-                                        Password
+                                        Verification Code
                                     </label>
                                     <input
-                                        id="signup-password"
-                                        type="password"
-                                        placeholder="••••••••"
+                                        id="confirmation-code"
+                                        type="text"
+                                        placeholder="Enter code"
+                                        value={confirmationCode}
+                                        onChange={(e) =>
+                                            setConfirmationCode(e.target.value)
+                                        }
                                         className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        required
                                     />
                                 </div>
 
-                                <div className="space-y-1">
-                                    <label
-                                        htmlFor="signup-confirm"
-                                        className="text-sm font-medium"
-                                    >
-                                        Confirm Password
-                                    </label>
-                                    <input
-                                        id="signup-confirm"
-                                        type="password"
-                                        placeholder="••••••••"
-                                        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                                    />
-                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isLoading}
+                                >
+                                    {isLoading
+                                        ? 'Verifying...'
+                                        : 'Verify Account'}
+                                </button>
                             </div>
-
-                            <button className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer">
-                                Create Account
-                            </button>
-                        </div>
+                        </form>
                     )}
                 </div>
             </div>
@@ -210,6 +404,6 @@ export function AuthModal({
     // does not render if modal is not open
     if (!isOpen) return null;
 
-    // using createPortal to render modal outside of the normal DOM hierarchy
+    // using createPortal to render modal
     return createPortal(modalContent, document.body);
 }

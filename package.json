@@ -20,10 +20,14 @@
         "@nxrocks/nx-spring-boot": "^11.0.1",
         "@tailwindcss/postcss": "^4.1.4",
         "autoprefixer": "^10.4.21",
-        "nx": "20.8.0",
+        "nx": "21.0.3",
+        "@nx/devkit": "21.0.3",
         "postcss": "^8.5.3",
         "tailwindcss": "^4.1.4",
         "ts-node": "^10.9.2",
         "typescript": "^5"
+    },
+    "dependencies": {
+        "aws-amplify": "^6.14.4"
     }
 }

@@ -4,11 +4,21 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { AuthModal } from './auth-modal';
+import { useAuth } from '../context/auth-context';
 
 export function Header() {
     const pathname = usePathname();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const { isAuthenticated, user, signOutUser, isLoading } = useAuth();
+
+    const handleSignOut = async () => {
+        try {
+            await signOutUser();
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -65,13 +75,35 @@ export function Header() {
                             className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                         />
                     </div>
-                    <button
-                        className="h-9 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium cursor-pointer"
-                        aria-label="Login"
-                        onClick={() => setAuthModalOpen(true)}
-                    >
-                        Login
-                    </button>
+                    {!isLoading && (
+                        <>
+                            {isAuthenticated ? (
+                                <div className="flex items-center space-x-4">
+                                    <span className="text-sm text-gray-600">
+                                        Hello,{' '}
+                                        {typeof user?.username === 'string'
+                                            ? user.username
+                                            : typeof user?.email === 'string'
+                                            ? user.email
+                                            : 'there'}
+                                    </span>
+                                    <button
+                                        onClick={handleSignOut}
+                                        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                                    >
+                                        Sign Out
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setIsAuthModalOpen(true)}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                >
+                                    Sign In
+                                </button>
+                            )}
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}
@@ -162,23 +194,35 @@ export function Header() {
                             </div>
                         </div>
                         <div className="py-2">
-                            <button
-                                className="w-full h-10 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 text-sm font-medium"
-                                onClick={() => {
-                                    setMobileMenuOpen(false);
-                                    setAuthModalOpen(true);
-                                }}
-                            >
-                                Login
-                            </button>
+                            {!isLoading && (
+                                <>
+                                    {isAuthenticated ? (
+                                        <button
+                                            className="w-full h-10 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                                            onClick={handleSignOut}
+                                        >
+                                            Sign Out
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="w-full h-10 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                            onClick={() =>
+                                                setIsAuthModalOpen(true)
+                                            }
+                                        >
+                                            Sign In
+                                        </button>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
             )}
 
             <AuthModal
-                isOpen={authModalOpen}
-                onClose={() => setAuthModalOpen(false)}
+                isOpen={isAuthModalOpen}
+                onClose={() => setIsAuthModalOpen(false)}
             />
         </header>
     );

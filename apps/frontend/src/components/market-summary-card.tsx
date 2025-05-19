@@ -3,9 +3,31 @@
 import { useIndices } from '../hooks/use-indices';
 import { useEffect, useState } from 'react';
 
+function TimeDisplay() {
+    const [currentTime, setCurrentTime] = useState<string>('');
+
+    useEffect(() => {
+        // format matches server time format
+        const updateTime = () => {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            setCurrentTime(`${hours}:${minutes}:${seconds}`);
+        };
+
+        updateTime();
+
+        const interval = setInterval(updateTime, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    return <span>{currentTime}</span>;
+}
+
 export function MarketSummaryCard() {
     const { indices, isLoading, error } = useIndices();
-    const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+    const [, setLastUpdated] = useState<Date>(new Date());
 
     // refresh data every 15 minutes
     useEffect(() => {
@@ -100,7 +122,7 @@ export function MarketSummaryCard() {
                 )}
 
                 <div className="pt-2 text-xs text-muted-foreground">
-                    Last updated: {lastUpdated.toLocaleTimeString()}
+                    Last updated: <TimeDisplay />
                 </div>
             </div>
         </div>

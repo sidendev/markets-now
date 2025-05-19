@@ -7,6 +7,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -37,13 +38,17 @@ public class IndicesControllerTest {
         quote2.setChange(250.0);
         quote2.setVolume(2000000L);
 
-        when(indicesService.getCachedQuotes()).thenReturn(List.of(quote1, quote2));
+        List<IndexQuote> quotes = List.of(quote1, quote2);
+        
+        IndexQuotesResponse response = new IndexQuotesResponse(quotes, true, new Date());
+        
+        when(indicesService.getCachedQuotes()).thenReturn(response);
 
         mockMvc.perform(get("/api/indices"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].symbol").value("^GSPC"))
-                .andExpect(jsonPath("$[0].price").value(5000.0))
-                .andExpect(jsonPath("$[1].symbol").value("^IXIC"));
+                .andExpect(jsonPath("$.quotes.length()").value(2))
+                .andExpect(jsonPath("$.quotes[0].symbol").value("^GSPC"))
+                .andExpect(jsonPath("$.quotes[0].price").value(5000.0))
+                .andExpect(jsonPath("$.quotes[1].symbol").value("^IXIC"));
     }
 }

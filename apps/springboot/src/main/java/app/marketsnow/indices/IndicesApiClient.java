@@ -16,14 +16,19 @@ public class IndicesApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     public IndexQuote fetchQuote(String symbol) {
-        String url = String.format(
-                "https://financialmodelingprep.com/stable/quote-short?symbol=%s&apikey=%s",
-                symbol,
-                FmpApiKey
-        );
+        try {
+            String url = String.format(
+                    "https://financialmodelingprep.com/stable/quote-short?symbol=%s&apikey=%s",
+                    symbol,
+                    FmpApiKey
+            );
 
-        IndexQuote[] response = restTemplate.getForObject(url, IndexQuote[].class);
-        return response != null && response.length > 0 ? response[0] : null;
+            IndexQuote[] response = restTemplate.getForObject(url, IndexQuote[].class);
+            return response != null && response.length > 0 ? response[0] : null;
+        } catch (Exception e) {
+            System.out.println("Error fetching quote for " + symbol + ": " + e.getMessage());
+            return null;
+        }
     }
 
     public List<IndexQuote> fetchAllQuotes() {
@@ -34,5 +39,4 @@ public class IndicesApiClient {
                 .filter(Objects::nonNull)
                 .toList();
     }
-
 }

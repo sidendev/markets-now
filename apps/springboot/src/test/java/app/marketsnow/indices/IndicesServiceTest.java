@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-        import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.*;
 
 public class IndicesServiceTest {
 
@@ -37,11 +37,11 @@ public class IndicesServiceTest {
         indicesService.refreshCache();
 
         // Assert: cache should now contain those values
-        List<IndexQuote> cachedQuotes = indicesService.getCachedQuotes();
+        IndexQuotesResponse response = indicesService.getCachedQuotes();
+        List<IndexQuote> cachedQuotes = response.getQuotes();
+        
         assertEquals(2, cachedQuotes.size());
-
         assertTrue(cachedQuotes.stream().anyMatch(q -> q.getSymbol().equals("^GSPC")));
         assertTrue(cachedQuotes.stream().anyMatch(q -> q.getSymbol().equals("^IXIC")));
     }
 }
-

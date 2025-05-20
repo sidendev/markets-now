@@ -3,7 +3,7 @@
 import { useIndices } from '../hooks/use-indices';
 import { useEffect, useState } from 'react';
 
-function TimeDisplay() {
+function TimeDisplay({ initialTime }: { initialTime: number | null }) {
     const [currentTime, setCurrentTime] = useState<string>('');
 
     useEffect(() => {
@@ -22,11 +22,25 @@ function TimeDisplay() {
         return () => clearInterval(interval);
     }, []);
 
+    // format the epoch timestamp if provided, otherwise show current time
+    if (initialTime) {
+        const date = new Date(initialTime);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        return (
+            <span>
+                {hours}:{minutes}:{seconds}
+            </span>
+        );
+    }
+
     return <span>{currentTime}</span>;
 }
 
 export function MarketSummaryCard() {
-    const { indices, isLoading, error } = useIndices();
+    const { indices, isLoading, error, marketsOpen, lastUpdated } =
+        useIndices();
     const [, setLastUpdated] = useState<Date>(new Date());
 
     // refresh data every 15 minutes
@@ -122,7 +136,12 @@ export function MarketSummaryCard() {
                 )}
 
                 <div className="pt-2 text-xs text-muted-foreground">
-                    Last updated: <TimeDisplay />
+                    {marketsOpen ? (
+                        <span className="text-green-500">Markets Open</span>
+                    ) : (
+                        <span className="text-red-500">Markets Closed</span>
+                    )}{' '}
+                    · Last updated: <TimeDisplay initialTime={lastUpdated} />
                 </div>
             </div>
         </div>

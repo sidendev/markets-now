@@ -4,3 +4,9 @@ export interface MarketIndex {
     change: number;
     volume: number;
 }
+
+export interface MarketsData {
+    quotes: MarketIndex[];
+    marketsOpen: boolean;
+    lastUpdated: number;
+}

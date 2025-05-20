@@ -1,6 +1,6 @@
-import { MarketIndex } from './types';
+import { MarketIndex, MarketsData } from './types';
 
-export async function fetchIndices(): Promise<MarketIndex[]> {
+export async function fetchIndices(): Promise<MarketIndex[] | MarketsData> {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
     const response = await fetch(`${apiUrl}/api/indices`);
 

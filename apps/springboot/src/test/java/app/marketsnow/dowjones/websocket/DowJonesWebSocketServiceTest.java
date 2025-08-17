@@ -18,7 +18,7 @@ class DowJonesWebSocketServiceTest {
     @BeforeEach
     void setUp() {
         mockCache = mock(DowJonesQuoteCache.class);
-        objectMapper = mock(ObjectMapper.class); // or `new ObjectMapper()` if preferred
+        objectMapper = mock(ObjectMapper.class);
         mockClient = mock(DowJonesWebSocketClient.class);
 
         service = new DowJonesWebSocketService(mockCache, objectMapper) {

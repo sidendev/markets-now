@@ -29,6 +29,7 @@ apps/**/.next/
 .DS_Store
 *.pem
 .vscode/
+.idea
 
 # debug
 npm-debug.log*

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DowJonesWebSocketClientTest {
 
+    // Can lose this test - done in MessageBuilder
     @Test
     void shouldCorrectlyFormatSubscribeMessage() {
         String symbol = "AAPL";
@@ -18,6 +19,7 @@ public class DowJonesWebSocketClientTest {
         assertEquals(expected, actual);
     }
 
+    // WIP - need to test original onMessage method
     @Test
     void shouldHandleReceivedMessage() {
         DowJonesQuoteCache mockCache = new DowJonesQuoteCache();
@@ -26,6 +28,7 @@ public class DowJonesWebSocketClientTest {
         class TestClient extends DowJonesWebSocketClient {
             private String lastMessage;
 
+            // Inner test class - extends DowJonesWebSocketClient to override onMessage
             public TestClient(URI uri, DowJonesQuoteCache cache, ObjectMapper mapper) {
                 super(uri, cache, mapper);
             }
